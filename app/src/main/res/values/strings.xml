@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Simply Tweet 2</string>
+    <string name="login_label">Log in</string>
+    <string name="compose_hint">What\'s happening?</string>
+    <string name="compose_tweet_button">Tweet</string>
+    <string name="compose_cancel_button">Cancel</string>
+    <string name="tweet_details_retweet_label">RETWEETS</string>
+    <string name="tweet_details_likes_label">LIKES</string>
+    <string name="tweet_details_reply_button">Tweet</string>
+    <string name="tweet_details_reply_to">Reply to</string>
+
+</resources>

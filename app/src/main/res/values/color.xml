@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1DA1F2</color>
+    <color name="primary_dark">#1DA1F2</color>
+    <color name="primary_light">#1DA1F2</color>
+    <color name="accent">#1DA1F2</color>
+    <color name="primary_text">#14171A</color>
+    <color name="secondary_text">#657786</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#AAB8C2</color>
+</resources>

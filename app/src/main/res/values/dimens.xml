@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="tweet_timeline_body_size">16sp</dimen>
+    <dimen name="tweet_timeline_name_size">12sp</dimen>
+    <dimen name="tweet_details_body_size">20sp</dimen>
+
+    <dimen name="tweet_details_item_padding">16dp</dimen>
+</resources>

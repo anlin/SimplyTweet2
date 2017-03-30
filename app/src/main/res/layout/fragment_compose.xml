@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:minLines="6"
+        android:id="@+id/compose_text"
+        android:hint="@string/compose_hint" />
+
+    <TextView
+        android:text="140"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/compose_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/remaining_length" />
+
+    <Button
+        android:text="@string/compose_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/compose_text"
+        android:layout_toLeftOf="@+id/tweet"
+        android:layout_toStartOf="@+id/tweet"
+        android:id="@+id/cancel"
+        style="@style/Widget.AppCompat.Button.Colored"/>
+
+    <Button
+        android:text="@string/compose_tweet_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tweet"
+        android:layout_alignBaseline="@+id/cancel"
+        android:layout_alignBottom="@+id/cancel"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:text="@string/compose_tweet_button"
+        style="@style/Widget.AppCompat.Button.Colored"/>
+</RelativeLayout>
