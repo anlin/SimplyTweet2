@@ -19,6 +19,10 @@ public class User {
     Long followerCount;
     Long followingCount;
 
+    public User(String name) {
+        this.name = name;
+    }
+
     public String getScreenName() {
         return screenName;
     }
