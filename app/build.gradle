@@ -54,4 +54,6 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.6'
     //Video Player Manager
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
+    //View Pager
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }

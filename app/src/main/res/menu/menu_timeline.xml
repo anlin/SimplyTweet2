@@ -8,4 +8,9 @@
         app:showAsAction="always"
         android:title="Compose"
         />
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_action_profile"
+        app:showAsAction="always"
+        android:title="Profile" />
 </menu>

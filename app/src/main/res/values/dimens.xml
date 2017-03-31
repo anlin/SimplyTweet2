@@ -9,4 +9,6 @@
     <dimen name="tweet_details_body_size">20sp</dimen>
 
     <dimen name="tweet_details_item_padding">16dp</dimen>
+
+    <dimen name="tabs_indicator_height">4dp</dimen>
 </resources>

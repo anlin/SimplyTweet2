@@ -11,26 +11,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.thunder.simplytweet.R;
-import com.thunder.simplytweet.activities.TimelineActivity;
 import com.thunder.simplytweet.activities.TweetDetailsActivity;
 import com.thunder.simplytweet.adapters.EndlessRecyclerViewScrollListener;
 import com.thunder.simplytweet.adapters.TweetAdapters;
 import com.thunder.simplytweet.models.Tweet;
-import com.thunder.simplytweet.restclient.TweetApplication;
-import com.thunder.simplytweet.restclient.TweetClient;
 import com.thunder.simplytweet.utils.ItemClickSupport;
 
-import org.json.JSONArray;
 import org.parceler.Parcels;
 
 import java.io.IOException;
@@ -39,15 +32,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
-
-import static com.thunder.simplytweet.R.id.swipeContainer;
 
 /**
  * Created by anlinsquall on 30/3/17.
  */
 
-public class TweetsListFragment extends Fragment {
+public abstract class TweetsListFragment extends Fragment {
 
     @BindView(R.id.tweets_timeline)
     RecyclerView tweetsView;
@@ -64,7 +54,6 @@ public class TweetsListFragment extends Fragment {
         void onLoadTweetFinish(int page);
     }
 
-    LoadTweetsListener loadTweetsListener;
 
     //Creation Life Cycle.
     @Override
@@ -72,7 +61,6 @@ public class TweetsListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         tweets = new ArrayList<Tweet>();
         adapter = new TweetAdapters(getActivity(), tweets);
-        loadTweetsListener = (LoadTweetsListener) getContext();
     }
 
     //Inflation Fragment
@@ -86,7 +74,7 @@ public class TweetsListFragment extends Fragment {
             loadTweetsFromCache();
         }
 
-        loadTweetsListener.onLoadTweetFinish(0);
+        loadMoreTweets(0);
         return view;
     }
 
@@ -102,8 +90,7 @@ public class TweetsListFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                LoadTweetsListener loadTweetsListener = (LoadTweetsListener) getActivity();
-                loadTweetsListener.onLoadTweetFinish(page);
+                loadMoreTweets(page);
             }
         };
 
@@ -127,8 +114,7 @@ public class TweetsListFragment extends Fragment {
                     return;
                 }
                 adapter.clear();
-                LoadTweetsListener loadTweetsListener = (LoadTweetsListener) getActivity();
-                loadTweetsListener.onLoadTweetFinish(0);
+                loadMoreTweets(0);
             }
         });
 
@@ -169,6 +155,8 @@ public class TweetsListFragment extends Fragment {
         }
         return false;
     }
+
+    protected abstract void loadMoreTweets(int page);
 
 
 }

@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 /*
@@ -42,6 +43,15 @@ public class TweetClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	// get Mention Timeline
+	public void getMentionTimeline(int page, AsyncHttpResponseHandler handler ) {
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+		// Can specify query string params directly or through RequestParams.
+		RequestParams params = new RequestParams();
+		params.put("page", String.valueOf(page));
+		client.get(apiUrl, params, handler);
+	}
+
 	// post a tweet
 	public void postTweet(String body, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("statuses/update.json");
@@ -49,6 +59,22 @@ public class TweetClient extends OAuthBaseClient {
 		params.put("status", body);
 		client.post(apiUrl, params, handler);
 	}
+
+	public void getUserTimeline(String screenName, AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl("statuses/user_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		params.put("screen_name", screenName);
+		client.get(apiUrl, params, handler);
+	}
+
+	public void getUserInfo(AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		RequestParams params = new RequestParams();
+		client.get(apiUrl, params, handler);
+	}
+
+
 
 	// post a tweet for reply
 	public void replyTweet(String body, String replyId, AsyncHttpResponseHandler handler){
@@ -58,4 +84,6 @@ public class TweetClient extends OAuthBaseClient {
 		params.put("status", body);
 		client.post(apiUrl, params, handler);
 	}
+
+
 }
