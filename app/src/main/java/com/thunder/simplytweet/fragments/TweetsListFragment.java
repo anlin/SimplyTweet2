@@ -54,7 +54,6 @@ public abstract class TweetsListFragment extends Fragment {
         void onLoadTweetFinish(int page);
     }
 
-
     //Creation Life Cycle.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,12 +72,9 @@ public abstract class TweetsListFragment extends Fragment {
         if(!isOnline()){
             loadTweetsFromCache();
         }
-
         loadMoreTweets(0);
         return view;
     }
-
-
 
     private void setupTweetUI() {
         tweetsView.setAdapter(adapter);
@@ -157,6 +153,4 @@ public abstract class TweetsListFragment extends Fragment {
     }
 
     protected abstract void loadMoreTweets(int page);
-
-
 }

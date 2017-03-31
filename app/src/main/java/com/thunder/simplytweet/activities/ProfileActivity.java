@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.util.TextUtils;
 
 public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profile_user_image)
@@ -40,7 +41,44 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        // get Screen Name
+        String screenName = getIntent().getStringExtra("screen_name");
         client = TweetApplication.getRestClient();
+        if(!TextUtils.isEmpty(screenName)){
+            getOtherUserInfo(screenName);
+        }
+        else{
+            getOwnInfo();
+        }
+
+        if(savedInstanceState == null) {
+            // Create User Timeline
+            UserTimelineFragment fragment = UserTimelineFragment.newInstance(screenName);
+            //Display user fragment
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.profile_user_timeline, fragment);
+            fragmentTransaction.commit();
+        }
+    }
+
+    private void getOtherUserInfo(String screenName) {
+        client.getUserInfo(screenName, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] header, JSONObject jsonObject){
+                user = User.fromJson(jsonObject);
+                getSupportActionBar().setTitle("@" + user.getScreenName());
+                // populate header
+                populateUserHeaderData(user);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    private void getOwnInfo() {
         client.getUserInfo(new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] header, JSONObject jsonObject){
@@ -55,23 +93,13 @@ public class ProfileActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
-        // get Screen Name
-        String screenName = getIntent().getStringExtra("screen_name");
-        if(savedInstanceState == null) {
-            // Create User Timeline
-            UserTimelineFragment fragment = UserTimelineFragment.newInstance(screenName);
-            //Display user fragment
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.profile_user_timeline, fragment);
-            fragmentTransaction.commit();
-        }
     }
 
     private void populateUserHeaderData(User user) {
         Glide.with(this).load(user.getProfileImageUrl()).into(userProfileImage);
         userName.setText(user.getName());
         userTagline.setText(user.getTagline());
-        userFollowerCount.setText(String.valueOf(user.getFollowerCount()));
-        userFollowingCount.setText(String.valueOf(user.getFollowingCount()));
+        userFollowerCount.setText(user.getFollowerCount()+ " Followers");
+        userFollowingCount.setText(user.getFollowingCount() + " Followings");
     }
 }

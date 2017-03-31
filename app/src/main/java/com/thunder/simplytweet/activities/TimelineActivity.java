@@ -1,56 +1,31 @@
 package com.thunder.simplytweet.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Parcel;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.thunder.simplytweet.R;
-import com.thunder.simplytweet.adapters.EndlessRecyclerViewScrollListener;
-import com.thunder.simplytweet.adapters.TweetAdapters;
 import com.thunder.simplytweet.fragments.ComposeDialogFragment;
 import com.thunder.simplytweet.fragments.HomeTweetsListFragment;
 import com.thunder.simplytweet.fragments.MentionTweetsList;
-import com.thunder.simplytweet.fragments.TweetsListFragment;
 import com.thunder.simplytweet.models.Tweet;
 import com.thunder.simplytweet.restclient.TweetApplication;
 import com.thunder.simplytweet.restclient.TweetClient;
-import com.thunder.simplytweet.utils.ItemClickSupport;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static com.thunder.simplytweet.R.id.swipeContainer;
 
 public class TimelineActivity extends AppCompatActivity implements
         ComposeDialogFragment.ComposeDialogListener {
@@ -115,9 +90,6 @@ public class TimelineActivity extends AppCompatActivity implements
         tweetClient.postTweet(tweet,new JsonHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
                 Tweet postedTweet = new Tweet(jsonObject);
-//                tweets.add(0, postedTweet);
-//                adapter.notifyItemInserted(0);
-//                tweetsView.scrollToPosition(0);
             }
         });
     }
@@ -135,10 +107,6 @@ public class TimelineActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
         return false;
-    }
-
-    public void onComposeClick(View view) {
-        showComposeDialog();
     }
 
     // Return the order of the fragments in the view pager

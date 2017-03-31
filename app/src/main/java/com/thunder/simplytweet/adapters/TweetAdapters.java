@@ -1,6 +1,7 @@
 package com.thunder.simplytweet.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.thunder.simplytweet.R;
+import com.thunder.simplytweet.activities.ProfileActivity;
 import com.thunder.simplytweet.models.Tweet;
 import com.thunder.simplytweet.utils.Utils;
 
@@ -69,7 +71,7 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Tweet tweet = tweets.get(position);
+        final Tweet tweet = tweets.get(position);
 
         //Bind data with view
         holder.name.setText(tweet.getName());
@@ -83,6 +85,15 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         else{
             holder.mediaImage.setVisibility(View.GONE);
         }
+
+        holder.profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra("screen_name", tweet.getScreenName());
+                getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

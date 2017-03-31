@@ -1,12 +1,22 @@
 package com.thunder.simplytweet.fragments;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.thunder.simplytweet.R;
 import com.thunder.simplytweet.models.Tweet;
 import com.thunder.simplytweet.restclient.TweetApplication;
 import com.thunder.simplytweet.restclient.TweetClient;
 
 import org.json.JSONArray;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -14,6 +24,7 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class MentionTweetsList extends TweetsListFragment {
+
     @Override
     protected void loadMoreTweets(int page) {
         TweetClient tweetClient = TweetApplication.getRestClient();
