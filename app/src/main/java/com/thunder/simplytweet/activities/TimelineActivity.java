@@ -1,5 +1,6 @@
 package com.thunder.simplytweet.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,8 +28,12 @@ import java.io.IOException;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
+
 public class TimelineActivity extends AppCompatActivity implements
         ComposeDialogFragment.ComposeDialogListener {
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +92,17 @@ public class TimelineActivity extends AppCompatActivity implements
             return;
         }
         TweetClient tweetClient = TweetApplication.getRestClient();
+        progressDialog.show();
         tweetClient.postTweet(tweet,new JsonHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
                 Tweet postedTweet = new Tweet(jsonObject);
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                progressDialog.dismiss();
             }
         });
     }
@@ -136,5 +149,12 @@ public class TimelineActivity extends AppCompatActivity implements
         public int getCount() {
             return tabTitles.length;
         }
+    }
+
+    void setupProgressDialog(){
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Retrieving tweets...");
+        progressDialog.setCancelable(false);
     }
 }

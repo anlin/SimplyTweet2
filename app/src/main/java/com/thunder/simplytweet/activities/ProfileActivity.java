@@ -1,5 +1,6 @@
 package com.thunder.simplytweet.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,8 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.util.TextUtils;
 
+import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
+
 public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profile_user_image)
     ImageView userProfileImage;
@@ -33,6 +36,8 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profile_following_count)
     TextView userFollowingCount;
 
+    ProgressDialog progressDialog;
+
     TweetClient client;
     User user;
 
@@ -41,9 +46,12 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        setupProgressDialog();
         // get Screen Name
         String screenName = getIntent().getStringExtra("screen_name");
         client = TweetApplication.getRestClient();
+        if(!progressDialog.isShowing())
+            progressDialog.show();
         if(!TextUtils.isEmpty(screenName)){
             getOtherUserInfo(screenName);
         }
@@ -69,10 +77,12 @@ public class ProfileActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle("@" + user.getScreenName());
                 // populate header
                 populateUserHeaderData(user);
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                progressDialog.dismiss();
                 super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
@@ -86,11 +96,13 @@ public class ProfileActivity extends AppCompatActivity {
                 getSupportActionBar().setTitle("@" + user.getScreenName());
                 // populate header
                 populateUserHeaderData(user);
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                progressDialog.dismiss();
             }
         });
     }
@@ -101,5 +113,12 @@ public class ProfileActivity extends AppCompatActivity {
         userTagline.setText(user.getTagline());
         userFollowerCount.setText(user.getFollowerCount()+ " Followers");
         userFollowingCount.setText(user.getFollowingCount() + " Followings");
+    }
+
+    void setupProgressDialog(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Retrieving tweets...");
+        progressDialog.setCancelable(false);
     }
 }
