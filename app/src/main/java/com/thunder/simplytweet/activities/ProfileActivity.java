@@ -102,7 +102,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     void setupProgressDialog(){
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Retrieving tweets...");

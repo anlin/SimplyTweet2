@@ -14,12 +14,16 @@ import com.bumptech.glide.Glide;
 import com.thunder.simplytweet.R;
 import com.thunder.simplytweet.activities.ProfileActivity;
 import com.thunder.simplytweet.models.Tweet;
+import com.thunder.simplytweet.ui.PatternEditableBuilder;
 import com.thunder.simplytweet.utils.Utils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.thunder.simplytweet.R.id.tweet;
 
 /**
  * Created by anlinsquall on 25/3/17.
@@ -89,11 +93,27 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         holder.profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                intent.putExtra("screen_name", tweet.getScreenName());
-                getContext().startActivity(intent);
+                onUserProfileClick(tweet.getScreenName());
             }
         });
+
+        // Linkify body text
+        new PatternEditableBuilder()
+                .addPattern(Pattern.compile("\\@(\\w+)"),
+                        new PatternEditableBuilder.SpannableClickedListener(){
+                            @Override
+                            public void onSpanClicked(String screenName) {
+                                onUserProfileClick(screenName);
+                            }
+                        })
+                .addPattern(Pattern.compile("\\#(\\w+)"),
+                        new PatternEditableBuilder.SpannableClickedListener() {
+                            @Override
+                            public void onSpanClicked(String text) {
+                                // TODO Link to search page for hashtags.
+                            }
+                        })
+                .into(holder.body);
     }
 
     @Override
@@ -111,5 +131,11 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
     public void addAll(List<Tweet> tweets){
         this.tweets.addAll(tweets);
         notifyDataSetChanged();
+    }
+
+    private void onUserProfileClick(String screenName){
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("screen_name", screenName);
+        getContext().startActivity(intent);
     }
 }
