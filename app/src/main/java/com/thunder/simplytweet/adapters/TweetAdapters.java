@@ -7,8 +7,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.thunder.simplytweet.R;
@@ -24,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.thunder.simplytweet.R.id.tweet;
+import static com.thunder.simplytweet.R.id.tweet_reply;
 
 /**
  * Created by anlinsquall on 25/3/17.
@@ -43,6 +46,12 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         TextView timeAgo;
         @BindView(R.id.mediaImage)
         ImageView mediaImage;
+        @BindView(R.id.tweet_reply)
+        ImageButton tweetReply;
+        @BindView(R.id.tweet_retweet)
+        ImageButton tweetRetweet;
+        @BindView(R.id.tweet_heart)
+        ImageButton tweetHeart;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -52,6 +61,10 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
 
     private List<Tweet> tweets;
     private Context context;
+
+    private View.OnClickListener replyOnClickListener;
+    private View.OnClickListener retweetOnClickListener;
+    private View.OnClickListener heartOnClickListener;
 
     public TweetAdapters(Context context, List<Tweet> tweets) {
         this.tweets = tweets;
@@ -77,10 +90,13 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Tweet tweet = tweets.get(position);
 
+        setupButtonsListeners(holder, tweet);
+
         //Bind data with view
         holder.name.setText(tweet.getName());
         holder.userName.setText(tweet.getScreenName());
         holder.body.setText(tweet.getBody());
+        LinkifyBodyText(holder);
         holder.timeAgo.setText(Utils.getRelativeTimeAgo(tweet.getTimestamp()));
         Glide.with(context).load(tweet.getProfileImageUrl()).into(holder.profile);
         if(!TextUtils.isEmpty(tweet.getMediaImageUrl())){
@@ -96,7 +112,32 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                 onUserProfileClick(tweet.getScreenName());
             }
         });
+    }
 
+    @Override
+    public int getItemCount() {
+        return tweets.size();
+    }
+
+    //Clear all tweets
+    public void clear(){
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add tweets
+    public void addAll(List<Tweet> tweets){
+        this.tweets.addAll(tweets);
+        notifyDataSetChanged();
+    }
+
+    private void onUserProfileClick(String screenName){
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
+        intent.putExtra("screen_name", screenName);
+        getContext().startActivity(intent);
+    }
+
+    private void LinkifyBodyText(ViewHolder holder) {
         // Linkify body text
         new PatternEditableBuilder()
                 .addPattern(Pattern.compile("\\@(\\w+)"),
@@ -116,26 +157,31 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                 .into(holder.body);
     }
 
-    @Override
-    public int getItemCount() {
-        return tweets.size();
-    }
+    private void setupButtonsListeners(ViewHolder holder, Tweet tweet) {
+        replyOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Click Reply", Toast.LENGTH_SHORT).show();
+                //TODO Reply Dialog
+            }
+        };
+        retweetOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Click Retweet", Toast.LENGTH_SHORT).show();
+                //TODO Retweet Network Call
+            }
+        };
+        heartOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Click heart", Toast.LENGTH_SHORT).show();
+                // TODO Hear Network Call
+            }
+        };
 
-   //Clear all tweets
-    public void clear(){
-        tweets.clear();
-        notifyDataSetChanged();
-    }
-
-    // Add tweets
-    public void addAll(List<Tweet> tweets){
-        this.tweets.addAll(tweets);
-        notifyDataSetChanged();
-    }
-
-    private void onUserProfileClick(String screenName){
-        Intent intent = new Intent(getContext(), ProfileActivity.class);
-        intent.putExtra("screen_name", screenName);
-        getContext().startActivity(intent);
+        holder.tweetReply.setOnClickListener(replyOnClickListener);
+        holder.tweetRetweet.setOnClickListener(retweetOnClickListener);
+        holder.tweetHeart.setOnClickListener(heartOnClickListener);
     }
 }
