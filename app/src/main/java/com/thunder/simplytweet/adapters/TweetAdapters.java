@@ -4,18 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.thunder.simplytweet.R;
 import com.thunder.simplytweet.activities.ProfileActivity;
 import com.thunder.simplytweet.models.Tweet;
+import com.thunder.simplytweet.restclient.TweetApplication;
+import com.thunder.simplytweet.restclient.TweetClient;
 import com.thunder.simplytweet.ui.PatternEditableBuilder;
 import com.thunder.simplytweet.utils.Utils;
 
@@ -24,6 +29,7 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cz.msebera.android.httpclient.Header;
 
 import static com.thunder.simplytweet.R.id.tweet;
 import static com.thunder.simplytweet.R.id.tweet_reply;
@@ -47,11 +53,11 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         @BindView(R.id.mediaImage)
         ImageView mediaImage;
         @BindView(R.id.tweet_reply)
-        ImageButton tweetReply;
+        Button tweetReply;
         @BindView(R.id.tweet_retweet)
-        ImageButton tweetRetweet;
+        Button tweetRetweet;
         @BindView(R.id.tweet_heart)
-        ImageButton tweetHeart;
+        Button tweetHeart;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -112,6 +118,9 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                 onUserProfileClick(tweet.getScreenName());
             }
         });
+
+        holder.tweetHeart.setText(String.valueOf(tweet.getLikesCount()));
+        holder.tweetRetweet.setText(String.valueOf(tweet.getRetweetsCount()));
     }
 
     @Override
@@ -157,7 +166,7 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                 .into(holder.body);
     }
 
-    private void setupButtonsListeners(ViewHolder holder, Tweet tweet) {
+    private void setupButtonsListeners(ViewHolder holder, final Tweet tweet) {
         replyOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,15 +177,73 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         retweetOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Click Retweet", Toast.LENGTH_SHORT).show();
-                //TODO Retweet Network Call
+                TweetClient tweetClient = TweetApplication.getRestClient();
+                if(tweet.getRetweeted()){
+                    tweetClient.postUnretweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            tweet.setRetweeted(false);
+                            tweet.save();
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+                    });
+                }else{
+                    tweetClient.postRetweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            tweet.setRetweeted(true);
+                            tweet.save();
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+                    });
+                }
+                // TODO Update UI button. So, user will know if it is favorited
             }
         };
         heartOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Click heart", Toast.LENGTH_SHORT).show();
-                // TODO Hear Network Call
+                TweetClient tweetClient = TweetApplication.getRestClient();
+                if(tweet.getFavourited()){
+                    tweetClient.unfavouriteTweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            tweet.setFavourited(false);
+                            tweet.save();
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+                    });
+                }else{
+                    tweetClient.favouriteTweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            tweet.setFavourited(true);
+                            tweet.save();
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.d("DEBUG", responseBody.toString());
+                        }
+                    });
+                }
+                // TODO Update UI button. So, user will know if it is favorited
             }
         };
 

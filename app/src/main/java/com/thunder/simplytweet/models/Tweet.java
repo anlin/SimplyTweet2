@@ -46,6 +46,10 @@ public class Tweet extends BaseModel {
     long likesCount;
 	@Column
 	String extendedMediaVideoUrl;
+	@Column
+	Boolean isFavourited;
+	@Column
+	Boolean isRetweeted;
 
 
 
@@ -68,6 +72,8 @@ public class Tweet extends BaseModel {
 			this.profileImageUrl = object.getJSONObject("user").getString("profile_image_url");
             this.mediaImageUrl = "";
 			this.extendedMediaVideoUrl="";
+			this.isFavourited = object.getBoolean("favorited");
+			this.isRetweeted = object.getBoolean("retweeted");
             JSONObject entityObject = object.getJSONObject("entities");
             if(entityObject.has("media")) {
                 this.mediaImageUrl = entityObject.getJSONArray("media").getJSONObject(0)
@@ -125,6 +131,14 @@ public class Tweet extends BaseModel {
 		return extendedMediaVideoUrl;
 	}
 
+	public Boolean getFavourited() {
+		return isFavourited;
+	}
+
+	public Boolean getRetweeted() {
+		return isRetweeted;
+	}
+
 	// Setters
 	public void setName(String name) {
 		this.name = name;
@@ -134,7 +148,15 @@ public class Tweet extends BaseModel {
 		this.body = body;
 	}
 
-	public static ArrayList<Tweet> fromJson (JSONArray jsonArray){
+    public void setFavourited(Boolean favourited) {
+        isFavourited = favourited;
+    }
+
+    public void setRetweeted(Boolean retweeted) {
+        isRetweeted = retweeted;
+    }
+
+    public static ArrayList<Tweet> fromJson (JSONArray jsonArray){
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
 
 		for (int i = 0; i < jsonArray.length(); i ++){
