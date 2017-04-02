@@ -97,4 +97,8 @@ public class UserListActivity extends AppCompatActivity {
             });
         }
     }
+
+    //TODO: Move to users list fragments
+    //TODO: UI Improvements
+    //TODO: Button change state if the user is already added
 }
