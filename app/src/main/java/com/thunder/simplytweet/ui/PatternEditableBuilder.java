@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by anlinsquall on 1/4/17.
- */
-
 /*
      Create clickable spans within a TextView
      made easy with pattern matching!

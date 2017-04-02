@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/item_padding"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/user_list_profile"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/user_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/item_padding"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/user_list_profile"
+        android:textSize="@dimen/tweet_timeline_name_size"
+        android:textStyle="bold"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/user_list_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_list_name"
+        android:layout_marginLeft="@dimen/item_padding"
+        android:layout_toEndOf="@+id/user_list_profile"
+        android:layout_toRightOf="@+id/user_list_profile"
+        android:textSize="@dimen/tweet_timeline_name_size"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/user_list_tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_list_screen_name"
+        android:layout_marginLeft="@dimen/item_padding"
+        android:layout_toRightOf="@+id/user_list_profile"
+        android:layout_toLeftOf="@+id/user_list_add"
+        android:textSize="@dimen/tweet_timeline_body_size"
+        android:text="TextView" />
+
+    <ImageButton
+        android:id="@+id/user_list_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_action_add"
+        style="@style/Widget.AppCompat.Button.Colored"/>
+</RelativeLayout>

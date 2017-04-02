@@ -11,4 +11,5 @@
     <dimen name="tweet_details_item_padding">16dp</dimen>
 
     <dimen name="tabs_indicator_height">4dp</dimen>
+    <dimen name="item_padding">8dp</dimen>
 </resources>

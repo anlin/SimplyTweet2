@@ -1,10 +1,12 @@
 package com.thunder.simplytweet.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
     TweetClient client;
     User user;
     ActivityProfileBinding binding;
+    String screenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
         setupProgressDialog();
         // get Screen Name
-        String screenName = getIntent().getStringExtra("screen_name");
+        screenName = getIntent().getStringExtra("screen_name");
         client = TweetApplication.getRestClient();
         if(!progressDialog.isShowing())
             progressDialog.show();
@@ -106,5 +109,19 @@ public class ProfileActivity extends AppCompatActivity {
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Retrieving tweets...");
         progressDialog.setCancelable(false);
+    }
+
+    public void onFollowersClick(View view) {
+        Intent intent = new Intent(this, UserListActivity.class);
+        intent.putExtra("screen_name", screenName);
+        intent.putExtra("is_followers", true);
+        startActivity(intent);
+    }
+
+    public void onFollowingsClick(View view){
+        Intent intent = new Intent(this, UserListActivity.class);
+        intent.putExtra("screen_name", screenName);
+        intent.putExtra("is_followers", false);
+        startActivity(intent);
     }
 }

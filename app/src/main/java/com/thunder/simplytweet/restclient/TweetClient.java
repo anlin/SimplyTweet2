@@ -68,12 +68,14 @@ public class TweetClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	// Get user info profile
 	public void getUserInfo(AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("account/verify_credentials.json");
 		RequestParams params = new RequestParams();
 		client.get(apiUrl, params, handler);
 	}
 
+	// Get other user profile
 	public void getUserInfo(String screenName, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("users/show.json");
 		RequestParams params = new RequestParams();
@@ -81,6 +83,23 @@ public class TweetClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	// Get followers list
+	public void getFollowersList(String screenName, AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl("followers/list.json");
+		RequestParams params = new RequestParams();
+		params.put("screen_name", screenName);
+		params.put("count", 25);
+		client.get(apiUrl, params, handler);
+	}
+
+	// Get followings list
+	public void getFollowingsList(String screenName, AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl("friends/list.json");
+		RequestParams params = new RequestParams();
+		params.put("screen_name", screenName);
+		params.put("count", 25);
+		client.get(apiUrl, params, handler);
+	}
 
 
 	// post a tweet for reply

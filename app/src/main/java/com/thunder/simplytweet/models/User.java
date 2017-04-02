@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.thunder.simplytweet.R.id.tweet;
+
 /**
  * Created by anlinsquall on 31/3/17.
  */
@@ -66,5 +68,24 @@ public class User {
     public static User fromJson (JSONObject jsonObject){
         User user = new User(jsonObject);
         return user;
+    }
+
+    public static ArrayList<User> fromJson (JSONArray jsonArray){
+        ArrayList<User> users = new ArrayList<User>(jsonArray.length());
+
+        for (int i = 0; i < jsonArray.length(); i ++){
+            JSONObject userJson = null;
+
+            try {
+                userJson = jsonArray.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            User user = new User(userJson);
+            users.add(user);
+        }
+        return users;
     }
 }
