@@ -1,10 +1,17 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'me.tatarka.retrolambda' // make sure last one
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     dataBinding {
         enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {

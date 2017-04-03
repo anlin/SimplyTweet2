@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +31,6 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 import static com.thunder.simplytweet.R.id.tweet;
-import static com.thunder.simplytweet.R.id.tweet_reply;
 
 /**
  * Created by anlinsquall on 25/3/17.
@@ -57,7 +55,7 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
         @BindView(R.id.tweet_retweet)
         Button tweetRetweet;
         @BindView(R.id.tweet_heart)
-        Button tweetHeart;
+        Button tweetFavourite;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -70,7 +68,7 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
 
     private View.OnClickListener replyOnClickListener;
     private View.OnClickListener retweetOnClickListener;
-    private View.OnClickListener heartOnClickListener;
+    private View.OnClickListener favouriteOnClickListener;
 
     public TweetAdapters(Context context, List<Tweet> tweets) {
         this.tweets = tweets;
@@ -96,7 +94,10 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Tweet tweet = tweets.get(position);
 
-        setupButtonsListeners(holder, tweet);
+        // Setup reply, retweet, favourite button listener
+        setupReplyButtonListener(holder, tweet);
+        setupRetweetButtonListener(holder, tweet);
+        setupFavouriteButtonListener(holder, tweet);
 
         //Bind data with view
         holder.name.setText(tweet.getName());
@@ -112,14 +113,11 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
             holder.mediaImage.setVisibility(View.GONE);
         }
 
-        holder.profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.profile.setOnClickListener(v -> {
                 onUserProfileClick(tweet.getScreenName());
-            }
         });
 
-        holder.tweetHeart.setText(String.valueOf(tweet.getLikesCount()));
+        holder.tweetFavourite.setText(String.valueOf(tweet.getLikesCount()));
         holder.tweetRetweet.setText(String.valueOf(tweet.getRetweetsCount()));
     }
 
@@ -166,25 +164,27 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                 .into(holder.body);
     }
 
-    private void setupButtonsListeners(ViewHolder holder, final Tweet tweet) {
-        replyOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void setupReplyButtonListener(ViewHolder holder, final Tweet tweet) {
+        replyOnClickListener = v -> {
                 Toast.makeText(context, "Click Reply", Toast.LENGTH_SHORT).show();
                 //TODO Reply Dialog
-            }
         };
-        retweetOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.tweetReply.setOnClickListener(replyOnClickListener);
+    }
+
+    private void setupRetweetButtonListener(ViewHolder holder, final Tweet tweet){
+        retweetOnClickListener = v ->  {
                 TweetClient tweetClient = TweetApplication.getRestClient();
                 if(tweet.getRetweeted()){
                     tweetClient.postUnretweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            tweet.setRetweeted(false);
+                            tweet.setRetweeted(true);
+                            tweet.setRetweetsCount(tweet.getRetweetsCount() - 1);
                             tweet.save();
-                            Log.d("DEBUG", responseBody.toString());
+                            holder.tweetRetweet.setCompoundDrawablesWithIntrinsicBounds
+                                    (R.drawable.ic_action_retweet, 0, 0, 0);
+                            holder.tweetRetweet.setText(String.valueOf(tweet.getRetweetsCount()));
                         }
 
                         @Override
@@ -197,8 +197,11 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             tweet.setRetweeted(true);
+                            tweet.setRetweetsCount(tweet.getRetweetsCount() + 1);
                             tweet.save();
-                            Log.d("DEBUG", responseBody.toString());
+                            holder.tweetRetweet.setCompoundDrawablesWithIntrinsicBounds
+                                    (R.drawable.ic_action_retweet_on, 0, 0, 0);
+                            holder.tweetRetweet.setText(String.valueOf(tweet.getRetweetsCount()));                           Log.d("DEBUG", responseBody.toString());
                         }
 
                         @Override
@@ -208,24 +211,28 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                     });
                 }
                 // TODO Update UI button. So, user will know if it is favorited
-            }
         };
-        heartOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.tweetRetweet.setOnClickListener(retweetOnClickListener);
+    }
+
+    private void setupFavouriteButtonListener(ViewHolder holder, final Tweet tweet){
+        favouriteOnClickListener = v -> {
                 TweetClient tweetClient = TweetApplication.getRestClient();
                 if(tweet.getFavourited()){
                     tweetClient.unfavouriteTweet(tweet.getTweetId(), new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             tweet.setFavourited(false);
+                            tweet.setLikesCount(tweet.getLikesCount() - 1);
                             tweet.save();
-                            Log.d("DEBUG", responseBody.toString());
+                            holder.tweetFavourite.setCompoundDrawablesWithIntrinsicBounds
+                                    (R.drawable.ic_action_heart, 0, 0, 0);
+                            holder.tweetFavourite.setText(String.valueOf(tweet.getLikesCount()));
                         }
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Log.d("DEBUG", responseBody.toString());
+
                         }
                     });
                 }else{
@@ -233,22 +240,21 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             tweet.setFavourited(true);
+                            tweet.setLikesCount(tweet.getLikesCount() + 1);
                             tweet.save();
-                            Log.d("DEBUG", responseBody.toString());
+                            holder.tweetFavourite.setCompoundDrawablesWithIntrinsicBounds
+                                    (R.drawable.ic_action_heart_on, 0, 0, 0);
+                            holder.tweetFavourite.setText(String.valueOf(tweet.getLikesCount()));
                         }
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Log.d("DEBUG", responseBody.toString());
+
                         }
                     });
                 }
                 // TODO Update UI button. So, user will know if it is favorited
-            }
         };
-
-        holder.tweetReply.setOnClickListener(replyOnClickListener);
-        holder.tweetRetweet.setOnClickListener(retweetOnClickListener);
-        holder.tweetHeart.setOnClickListener(heartOnClickListener);
+        holder.tweetFavourite.setOnClickListener(favouriteOnClickListener);
     }
 }

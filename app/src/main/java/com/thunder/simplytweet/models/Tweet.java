@@ -156,7 +156,15 @@ public class Tweet extends BaseModel {
         isRetweeted = retweeted;
     }
 
-    public static ArrayList<Tweet> fromJson (JSONArray jsonArray){
+	public void setRetweetsCount(long retweetsCount) {
+		this.retweetsCount = retweetsCount;
+	}
+
+	public void setLikesCount(long likesCount) {
+		this.likesCount = likesCount;
+	}
+
+	public static ArrayList<Tweet> fromJson (JSONArray jsonArray){
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
 
 		for (int i = 0; i < jsonArray.length(); i ++){
