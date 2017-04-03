@@ -2,7 +2,7 @@
 
 **Simply Tweet 2** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **11** hours spent in total
+Time spent: **11.5** hours spent in total
 
 ## User Stories
 
@@ -28,7 +28,7 @@ The following **optional** features are implemented:
   * [x] The user that wrote the original tweet is automatically "@" replied in compose
 * [x] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [x] User can take favorite (and unfavorite) or retweet actions on a tweet
-* [ ] User can **search for tweets matching a particular query** and see results
+* [x] User can **search for tweets matching a particular query** and see results
 * [x] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
 The following **bonus** features are implemented:

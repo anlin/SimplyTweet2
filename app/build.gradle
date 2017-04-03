@@ -64,7 +64,7 @@ dependencies {
     compile 'org.parceler:parceler-api:1.1.6'
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.android.support.constraint:constraint-layout:+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'org.parceler:parceler:1.1.6'
 }

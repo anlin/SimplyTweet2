@@ -9,6 +9,8 @@ import com.loopj.android.http.RequestParams;
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.TwitterApi;
 
+import static com.thunder.simplytweet.models.Tweet_Table.screenName;
+
 /*
  * 
  * This is the object responsible for communicating with a REST API. 
@@ -99,6 +101,14 @@ public class TweetClient extends OAuthBaseClient {
         client.get(apiUrl, params, handler);
     }
 
+    // Get followings list
+    public void searchTweet(String keyword, AsyncHttpResponseHandler handler){
+        String apiUrl = getApiUrl("search/tweets.json");
+        RequestParams params = new RequestParams();
+        params.put("q", keyword);
+        params.put("count", 25);
+        client.get(apiUrl, params, handler);
+    }
 
     // post a tweet for reply
     public void replyTweet(String body, String replyId, AsyncHttpResponseHandler handler){
