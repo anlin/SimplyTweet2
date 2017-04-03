@@ -10,5 +10,6 @@
     <string name="tweet_details_likes_label">LIKES</string>
     <string name="tweet_details_reply_button">Tweet</string>
     <string name="tweet_details_reply_to">Reply to</string>
+    <string name="reply_button">Reply</string>
 
 </resources>

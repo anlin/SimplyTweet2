@@ -2,6 +2,8 @@ package com.thunder.simplytweet.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.thunder.simplytweet.R;
 import com.thunder.simplytweet.activities.ProfileActivity;
+import com.thunder.simplytweet.fragments.ComposeDialogFragment;
+import com.thunder.simplytweet.fragments.ReplyDialogFragment;
 import com.thunder.simplytweet.models.Tweet;
 import com.thunder.simplytweet.restclient.TweetApplication;
 import com.thunder.simplytweet.restclient.TweetClient;
@@ -30,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
+import static com.thunder.simplytweet.R.id.parent;
 import static com.thunder.simplytweet.R.id.tweet;
 
 /**
@@ -166,10 +171,16 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
 
     private void setupReplyButtonListener(ViewHolder holder, final Tweet tweet) {
         replyOnClickListener = v -> {
-                Toast.makeText(context, "Click Reply", Toast.LENGTH_SHORT).show();
-                //TODO Reply Dialog
+                showReplyDialog(tweet);
         };
         holder.tweetReply.setOnClickListener(replyOnClickListener);
+    }
+
+    private void showReplyDialog(Tweet tweet) {
+        FragmentManager manager = ((FragmentActivity)context).getSupportFragmentManager();
+        ReplyDialogFragment replyDialogFragment = ReplyDialogFragment.newInstance("Simply Tweet"
+                , tweet);
+        replyDialogFragment.show(manager, "fragment_reply");
     }
 
     private void setupRetweetButtonListener(ViewHolder holder, final Tweet tweet){
@@ -210,7 +221,6 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                         }
                     });
                 }
-                // TODO Update UI button. So, user will know if it is favorited
         };
         holder.tweetRetweet.setOnClickListener(retweetOnClickListener);
     }
@@ -253,7 +263,6 @@ public class TweetAdapters extends RecyclerView.Adapter<TweetAdapters.ViewHolder
                         }
                     });
                 }
-                // TODO Update UI button. So, user will know if it is favorited
         };
         holder.tweetFavourite.setOnClickListener(favouriteOnClickListener);
     }

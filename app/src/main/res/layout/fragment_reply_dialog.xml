@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RelativeLayout
+        android:id="@+id/reply_header"
+        android:padding="8dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/reply_profile_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/reply_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/reply_profile_image"
+            android:textSize="@dimen/tweet_timeline_name_size"
+            android:layout_toRightOf="@+id/reply_profile_image"
+            tools:text="BBC News"/>
+
+        <TextView
+            android:id="@+id/reply_screen_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/reply_name"
+            android:textSize="@dimen/tweet_timeline_name_size"
+            android:layout_toRightOf="@+id/reply_name"
+            tools:text="\@BBC News"/>
+
+        <TextView
+            android:id="@+id/reply_time_since"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/reply_screen_name"
+            android:textSize="@dimen/tweet_timeline_name_size"
+            tools:text="3 min ago" />
+
+        <TextView
+            android:id="@+id/reply_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:layout_below="@id/reply_name"
+            android:layout_alignLeft="@+id/reply_name"
+            android:textSize="@dimen/tweet_timeline_body_size"
+            tools:text="This is a sample tweet hello."/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reply_header"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:background="@color/divider">
+
+        <TextView
+            android:id="@+id/reply_to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <EditText
+            android:id="@+id/reply_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:layout_below="@+id/reply_to"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/reply_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/reply_text"
+            android:text="@string/reply_button"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+        <TextView
+            android:id="@+id/reply_text_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/reply_button"
+            android:layout_marginRight="8dp"
+            android:textSize="@dimen/tweet_timeline_name_size"
+            android:layout_alignTop="@+id/reply_button"
+            android:layout_below="@+id/reply_text" />
+    </RelativeLayout>
+
+</RelativeLayout>
